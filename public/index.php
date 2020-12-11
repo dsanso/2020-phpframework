@@ -1,8 +1,7 @@
 <?php
 
-spl_autoload_register(function ($class_name)
-{
-  include '../' . $class_name . '.php';
-});
+require_once "../logic/init.php";
 
-\logic\Request::parse();
+use \logic\Routing\Router;
+
+Router::process($_SERVER['REQUEST_URI']);

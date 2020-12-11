@@ -4,21 +4,11 @@ namespace logic;
 
 class Request
 {
-  private static string $uri;
-  private static string $method;
-  private static array $data;
-
-  public static function parse()
+  public static function getData(string $key, $default = null)
   {
-    self::$uri = $_SERVER['REQUEST_URI'];
-    self::$method = $_SERVER['REQUEST_METHOD'];
-    self::$data = $_REQUEST;
+    if (isset($_REQUEST[$key]))
+      return $_REQUEST[$key];
 
-    self::serve();
-  }
-
-  public static function serve()
-  {
-    Route::serve(self::$uri);
+    return $default;
   }
 }
