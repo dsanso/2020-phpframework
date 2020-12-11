@@ -2,16 +2,17 @@
 
 namespace app\Controllers;
 
-use \logic\View;
+use app\Models\Product;
 
 class ProductController
 {
   public function show($name)
   {
-    // new View('myname', [
+    $products = Product::all();
+    // return view('myname', [
     //   'name' => $name
     // ]);
 
-    return 'hello mate';
+    return 'hello mate ' . $name;
   }
 }

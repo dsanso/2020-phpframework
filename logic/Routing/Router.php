@@ -2,14 +2,12 @@
 
 namespace logic\Routing;
 
-use logic\View;
-
 class Router
 {
   public static function process($uri)
   {
-    $uri = trim($uri, '/');
     $uri = preg_replace('/\?.*$/', '', $uri);
+    $uri = trim($uri, '/');
     $uri_array = explode('/', $uri);
     $uri_count = count($uri_array);
 

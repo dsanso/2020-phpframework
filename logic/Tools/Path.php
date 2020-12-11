@@ -1,6 +1,6 @@
 <?php
 
-namespace logic;
+namespace logic\Tools;
 
 class Path
 {

@@ -1,8 +1,8 @@
 <?php
 
-use logic\Path;
+use logic\Tools\Path;
 
-function view(string $viewName, array $params = [])
+function view(string $viewName, array $params = [], array $html_params = [])
 {
   $viewFileName = $viewName . '.view.php';
   $path = Path::getApp() . 'Views/' . $viewFileName;
@@ -12,6 +12,12 @@ function view(string $viewName, array $params = [])
     $template = file_get_contents($path);
 
     foreach ($params as $key => $value)
+    {
+      $regex = '/{{ \$' . $key . ' }}/';
+      $template = preg_replace($regex, htmlspecialchars($value, ENT_QUOTES, 'UTF-8', true), $template);
+    }
+
+    foreach ($html_params as $key => $value)
     {
       $regex = '/{{ \$' . $key . ' }}/';
       $template = preg_replace($regex, $value, $template);

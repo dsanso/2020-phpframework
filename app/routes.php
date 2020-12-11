@@ -1,8 +1,7 @@
 <?php
 
-use logic\View;
 use logic\Routing\Routes;
-use logic\Request;
+use logic\Tools\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,7 +11,9 @@ use logic\Request;
 
 Routes::add('/', function ()
 {
-  return view("myname");
+  return view("myname", [
+    'name' => Request::fetchGET('names', 'dude')
+  ]);
 });
 
 Routes::add("/test1/{number}", function ($number)
@@ -29,7 +30,7 @@ Routes::add("/test2/{name}", function ($name)
 
 Routes::add("/test3", function ()
 {
-  $userId = Request::getData('userId');
+  $userId = Request::fetchGET('userId');
 
   return "Standard query parameter: $userId";
 });

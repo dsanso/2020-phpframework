@@ -1,1 +1,1 @@
-<b>My name is {{ $nasme }}</b>
+<b>My name is {{ $name }}</b>
