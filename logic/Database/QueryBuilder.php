@@ -65,7 +65,12 @@ class QueryBuilder
 
     $stmt->execute();
 
-    return $stmt->fetchAll($pdo_fetch_style);
+    if (count($this->fetchMode) > 0)
+      $results = $stmt->fetchAll();
+    else
+      $results = $stmt->fetchAll($pdo_fetch_style);
+
+    return $results;
   }
 
   /**

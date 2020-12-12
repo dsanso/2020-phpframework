@@ -51,16 +51,7 @@ class Model
    */
   public static function all(): array
   {
-    // return Database::table(static::getTableName())->useModel(static::class)->get();
-
-    $pdo = Database::connect();
-
-    $stmt = $pdo->prepare("SELECT * FROM products");
-    $stmt->setFetchMode(\PDO::FETCH_CLASS, static::class);
-    $stmt->execute();
-    $all = $stmt->fetchAll();
-
-    return $all;
+    return Database::table(static::getTableName())->useModel(static::class)->get();
   }
 
   /**
