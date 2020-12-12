@@ -2,35 +2,86 @@
 
 namespace logic\Base;
 
-use logic\Database;
+use logic\Database\Database;
 
 class Model
 {
-  protected static string $tableName;
+  /**
+   * Define custom table name.
+   *
+   * @var string
+   */
+  protected static string $table;
 
-  public function save()
+
+  /**
+   * Define custom primary key.
+   *
+   * @var string
+   */
+  protected static string $primarykey = 'id';
+
+  /**
+   * Get table name.
+   *
+   * @return string
+   */
+  public static function getTableName(): string
   {
-    // $pdo = Database::connect();
+    if (!isset(static::$table))
+    {
+      $reflect = new \ReflectionClass(static::class);
+      $className = $reflect->getShortName();
 
-    // $statement = $link->prepare('INSERT INTO :table_name (name, lastname, age) VALUES (:fname, :sname, :age)');
+      $table = strtolower($className);
 
-    // $statement->execute([
-    //   'table_name' => self::$tableName,
-    //   'fname' => 'Bob',
-    //   'sname' => 'Desaunois',
-    //   'age' => '18',
-    // ]);
+      if (substr($table, -1) != 's')
+        $table .= 's';
+
+      static::$table = $table;
+    }
+
+    return static::$table;
   }
 
-  public static function all()
+  /**
+   * Load all rows from the database to the corresponding model.
+   *
+   * @return Model[]
+   */
+  public static function all(): array
   {
+    // return Database::table(static::getTableName())->useModel(static::class)->get();
+
     $pdo = Database::connect();
 
-    $stmt = $pdo->prepare("SELECT * FROM products;");
-    $stmt->setFetchMode(\PDO::FETCH_CLASS, self::class);
+    $stmt = $pdo->prepare("SELECT * FROM products");
+    $stmt->setFetchMode(\PDO::FETCH_CLASS, static::class);
     $stmt->execute();
-    $obj = $stmt->fetch();
+    $all = $stmt->fetchAll();
 
-    return $obj;
+    return $all;
+  }
+
+  /**
+   * Save model instance to the database.
+   *
+   * @return void
+   */
+  public function save(): void
+  {
+    $objVars = get_object_vars($this);
+
+    if (count($objVars) < 1)
+      return;
+
+    $pdo = Database::connect();
+
+    $stmt = $pdo->prepare('REPLACE INTO ' . static::getTableName() . ' (' . implode(', ', array_keys($objVars)) . ') VALUES (:' . implode(', :', array_keys($objVars)) . ')');
+
+    foreach ($objVars as $column => $value)
+      $stmt->bindValue($column, $value);
+
+    $stmt->execute();
   }
 }

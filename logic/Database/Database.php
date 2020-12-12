@@ -1,16 +1,14 @@
 <?php
 
-namespace logic;
+namespace logic\Database;
 
 use logic\Tools\Env;
 
-use PDO;
-
 class Database
 {
-  private static ?PDO $conn = null;
+  private static ?\PDO $conn = null;
 
-  public static function connect(): PDO
+  public static function connect(): \PDO
   {
     if (self::$conn != null)
       return self::$conn;
@@ -22,5 +20,10 @@ class Database
     $password = Env::get('DB_PASSWORD');
 
     return new \PDO("mysql:host=$host;port=$port;dbname=$database", $username, $password);
+  }
+
+  public static function table(string $table)
+  {
+    return new QueryBuilder($table);
   }
 }

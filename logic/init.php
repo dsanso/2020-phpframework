@@ -16,11 +16,18 @@ require_once 'helpers.php';
 
 require_once '../app/routes.php';
 
-$obj = Product::all();
+$all = Product::all();
 
-print_r($obj);
+// $all[0]->price = 150;
 
-$obj->name = "Dude";
+// $all[0]->save();
 
-print_r($obj);
+print_r($all);
+
+// $obj->name = "Dude";
+
+// print_r($obj);
+
+// echo Product::getTableName();
+
 exit();
