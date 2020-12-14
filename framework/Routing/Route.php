@@ -6,6 +6,7 @@ class Route
 {
   private string $uri;
   private $controller;
+  private array $variables = [];
 
   public function getURI()
   {
@@ -25,5 +26,15 @@ class Route
   public function setController($controller)
   {
     $this->controller = $controller;
+  }
+
+  public function getVariables()
+  {
+    return $this->variables;
+  }
+
+  public function addVariable(string $value)
+  {
+    array_push($this->variables, $value);
   }
 }

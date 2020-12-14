@@ -19,6 +19,6 @@ class Path
    */
   public static function getApp()
   {
-    return self::getRoot() . '/app/';
+    return static::getRoot() . '/app/';
   }
 }

@@ -11,8 +11,8 @@ class Env
 
     foreach ($lines as $line)
     {
-      if (explode("=", $line)[0] == $key)
-        return explode("=", $line)[1];
+      if (explode('=', $line)[0] == $key)
+        return explode('=', $line)[1];
     }
 
     return $default;

@@ -2,6 +2,8 @@
 
 namespace framework\Routing;
 
+use framework\Tools\Path;
+
 class Routes
 {
   /**
@@ -14,7 +16,9 @@ class Routes
    */
   public static function list(): array
   {
-    return self::$list;
+    require_once Path::getApp() . 'routes.php';
+
+    return static::$list;
   }
 
   /**
@@ -28,6 +32,6 @@ class Routes
     $route->setURI(trim($uri, '/'));
     $route->setController($controller);
 
-    array_push(self::$list, $route);
+    array_push(static::$list, $route);
   }
 }

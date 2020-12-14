@@ -24,7 +24,7 @@ function view(string $viewName, array $params = [], array $html_params = [])
     }
 
     $regex = '/{{.*?}}/';
-    $template = preg_replace($regex, "", $template);
+    $template = preg_replace($regex, '', $template);
 
     return $template;
   }
