@@ -1,8 +1,8 @@
 <?php
 
-namespace logic\Database;
+namespace framework\Database;
 
-use logic\Base\Model;
+use framework\Base\Model;
 
 class QueryBuilder
 {

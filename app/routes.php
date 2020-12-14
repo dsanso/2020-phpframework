@@ -1,7 +1,7 @@
 <?php
 
-use logic\Routing\Routes;
-use logic\Tools\Request;
+use framework\Routing\Routes;
+use framework\Tools\Request;
 
 /*
 |--------------------------------------------------------------------------

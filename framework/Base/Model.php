@@ -1,8 +1,8 @@
 <?php
 
-namespace logic\Base;
+namespace framework\Base;
 
-use logic\Database\Database;
+use framework\Database\Database;
 
 class Model
 {

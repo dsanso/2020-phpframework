@@ -1,8 +1,8 @@
 <?php
 
-namespace logic\Database;
+namespace framework\Database;
 
-use logic\Tools\Env;
+use framework\Tools\Env;
 
 class Database
 {

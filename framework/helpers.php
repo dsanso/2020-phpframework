@@ -1,6 +1,6 @@
 <?php
 
-use logic\Tools\Path;
+use framework\Tools\Path;
 
 function view(string $viewName, array $params = [], array $html_params = [])
 {

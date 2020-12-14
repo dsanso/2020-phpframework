@@ -1,6 +1,6 @@
 <?php
 
-namespace logic\Tools;
+namespace framework\Tools;
 
 class Request
 {

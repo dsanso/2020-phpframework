@@ -2,7 +2,7 @@
 
 namespace app\Models;
 
-use logic\Base\Model;
+use framework\Base\Model;
 
 class Product extends Model
 {
