@@ -9,10 +9,9 @@ class ProductController
 {
   public function show()
   {
-    // return Product::all();
-
     return View::get('products', [
-      'name' => '<script>console.log("working");</script>Doe',
+      'name' => 'John Doe',
+      'products' => Product::all(),
     ]);
   }
 }

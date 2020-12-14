@@ -17,7 +17,7 @@ class View
 
     $html = file_get_contents($path);
 
-    $lastComponentName = '';
+    $lastComponentImport = '';
 
     while (preg_match_all('/{{.*?}}/', $html, $matches, PREG_OFFSET_CAPTURE))
     {
@@ -48,20 +48,67 @@ class View
         {
           $snippetText = substr($snippetText, 1);
 
-          if ($lastComponentName != $snippetText)
+          if ($lastComponentImport != $snippetText)
           {
+            $snippetExplode = explode(' ', $snippetText);
 
-            $componentFileName = $snippetText . '.component.html';
-            $componentPath = Path::getApp() . 'Views/Components/' . $componentFileName;
-
-            if (!file_exists($componentPath))
+            if ($snippetExplode[0] == 'include' && count($snippetExplode) == 2)
             {
-              echo "Framework Error: View component not found! (Missing: $componentFileName)";
-              exit();
+              $componentFileName = $snippetExplode[1] . '.component.html';
+              $componentPath = Path::getApp() . 'Views/Components/' . $componentFileName;
+
+              if (!file_exists($componentPath))
+              {
+                echo "Framework Error: View component not found! (Missing: $componentFileName)";
+                exit();
+              }
+
+              $replacementContent = file_get_contents($componentPath);
+              $replacementContent = preg_replace('/(^\n+|\n+$)/', '', $replacementContent);
             }
 
-            $replacementContent = file_get_contents($componentPath);
-            $replacementContent = preg_replace('/(^\n+|\n+$)/', '', $replacementContent);
+            if ($snippetExplode[0] == 'foreach' && count($snippetExplode) == 4 && isset($variables[$snippetExplode[1]]) && is_array($variables[$snippetExplode[1]]))
+            {
+              $componentFileName = $snippetExplode[3] . '.component.html';
+              $componentPath = Path::getApp() . 'Views/Components/' . $componentFileName;
+
+              if (!file_exists($componentPath))
+              {
+                echo "Framework Error: View component not found! (Missing: $componentFileName)";
+                exit();
+              }
+
+              if (isset($variables[$snippetExplode[1]]) && is_array($variables[$snippetExplode[1]]))
+                for ($i = 0; $i < count($variables[$snippetExplode[1]]); $i++)
+                {
+                  $variables[$snippetExplode[1]][$i] = (array) $variables[$snippetExplode[1]][$i];
+                  $replacementContent .= file_get_contents($componentPath);
+
+                  preg_match_all('/{{.*?}}/', $replacementContent, $matches);
+                  $innerSnippets = $matches[0];
+
+                  foreach ($innerSnippets as $innerSnippet)
+                  {
+                    $innerSnippetText = substr($innerSnippet, 2, -2);
+
+                    if (isset($variables[$snippetExplode[1]][$i][$innerSnippetText]) && (is_string($variables[$snippetExplode[1]][$i][$innerSnippetText]) || is_numeric($variables[$snippetExplode[1]][$i][$innerSnippetText])))
+                    {
+                      $replacementContent = str_ireplace($innerSnippet, htmlspecialchars($variables[$snippetExplode[1]][$i][$innerSnippetText], ENT_QUOTES, 'UTF-8', true), $replacementContent);
+                    }
+                    elseif (preg_match('/^!.*!$/', $innerSnippetText))
+                    {
+                      $innerSnippetText = substr($innerSnippetText, 1, -1);
+
+                      if (isset($variables[$snippetExplode[1]][$i][$innerSnippetText]) && is_string($variables[$snippetExplode[1]][$i][$innerSnippetText]))
+                      {
+                        $replacementContent = $variables[$snippetExplode[1]][$i][$innerSnippetText];
+                      }
+                    }
+                  }
+                }
+
+              $replacementContent = preg_replace('/(^\n+|\n+$)/', '', $replacementContent);
+            }
           }
         }
 
@@ -69,7 +116,7 @@ class View
         $offset_difference += strlen($replacementContent) - strlen($snippet[0]);
       }
 
-      $lastComponentName = $snippetText;
+      $lastComponentImport = $snippetText;
     }
 
     return $html;
