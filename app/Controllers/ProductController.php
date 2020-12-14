@@ -3,18 +3,16 @@
 namespace app\Controllers;
 
 use app\Models\Product;
+use framework\Tools\View;
 
 class ProductController
 {
   public function show()
   {
-    $products = Product::all();
+    // return Product::all();
 
-    // print_r($products);
-    // return view('myname', [
-    //   'name' => $name
-    // ]);
-
-    return $products;
+    return View::get('products', [
+      'name' => 'Doe',
+    ]);
   }
 }
