@@ -17,6 +17,8 @@ class View
 
     $html = file_get_contents($path);
 
+    $lastComponentName = '';
+
     while (preg_match_all('/{{.*?}}/', $html, $matches, PREG_OFFSET_CAPTURE))
     {
       $snippets = $matches[0];
@@ -33,27 +35,41 @@ class View
         {
           $replacementContent = htmlspecialchars($variables[$snippetText], ENT_QUOTES, 'UTF-8', true);
         }
+        elseif (preg_match('/^!.*!$/', $snippetText))
+        {
+          $snippetText = substr($snippetText, 1, -1);
+
+          if (isset($variables[$snippetText]) && is_string($variables[$snippetText]))
+          {
+            $replacementContent = $variables[$snippetText];
+          }
+        }
         elseif (substr($snippetText, 0, 1) == '@')
         {
-          $snippetTextArray = explode(' ', $snippetText);
-          $snippetTextArray[0] = substr($snippetText, 1);
+          $snippetText = substr($snippetText, 1);
 
-          $componentFileName = $snippetTextArray[0] . '.component.html';
-          $componentPath = Path::getApp() . 'Views/Components/' . $componentFileName;
-
-          if (!file_exists($componentPath))
+          if ($lastComponentName != $snippetText)
           {
-            echo "Framework Error: View component not found! (Missing: $componentFileName)";
-            exit();
-          }
 
-          $replacementContent = file_get_contents($componentPath);
-          $replacementContent = preg_replace('/(^\n+|\n+$)/', '', $replacementContent);
+            $componentFileName = $snippetText . '.component.html';
+            $componentPath = Path::getApp() . 'Views/Components/' . $componentFileName;
+
+            if (!file_exists($componentPath))
+            {
+              echo "Framework Error: View component not found! (Missing: $componentFileName)";
+              exit();
+            }
+
+            $replacementContent = file_get_contents($componentPath);
+            $replacementContent = preg_replace('/(^\n+|\n+$)/', '', $replacementContent);
+          }
         }
 
         $html = substr_replace($html, $replacementContent, $snippetOffset + $offset_difference, strlen($snippet[0]));
         $offset_difference += strlen($replacementContent) - strlen($snippet[0]);
       }
+
+      $lastComponentName = $snippetText;
     }
 
     return $html;

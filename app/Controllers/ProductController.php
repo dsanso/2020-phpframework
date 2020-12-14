@@ -12,7 +12,7 @@ class ProductController
     // return Product::all();
 
     return View::get('products', [
-      'name' => 'Doe',
+      'name' => '<script>console.log("working");</script>Doe',
     ]);
   }
 }
