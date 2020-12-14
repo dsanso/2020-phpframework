@@ -5,6 +5,7 @@ namespace framework;
 use framework\Tools\Request;
 use framework\Routing\Router;
 use framework\Tools\Controller;
+use framework\Tools\View;
 
 class Framework
 {
@@ -21,7 +22,7 @@ class Framework
     else
     {
       http_response_code(404);
-      echo view('404');
+      echo View::get(404);
     }
   }
 }
