@@ -12,14 +12,14 @@ use framework\Routing\Routes;
 
 Routes::add('/', function ()
 {
-  return View::get('myname', [
-    'name' => Request::fetchGET('names', 'dude')
+  return View::get('home', [
+    'name' => 'dsanso'
   ]);
 });
 
-Routes::add('/test1/{number}', function ($number)
+Routes::add('/item/edit/{id}', function ($id)
 {
-  return "My favorite number is $number.";
+  return "You are editing item with the id: $id.";
 });
 
 Routes::add('/api', function ()
@@ -30,18 +30,13 @@ Routes::add('/api', function ()
   ];
 });
 
-Routes::add('/test2/{name}', function ($name)
+Routes::add('/standard/get/query', function ()
 {
-  return View::get('myname', [
-    'name' => $name
-  ]);
+  $username = Request::fetchGET('username');
+
+  return "Standard get query parameter: $username";
 });
 
-Routes::add('/test3', function ()
-{
-  $userId = Request::fetchGET('userId');
+Routes::add('/products', 'ProductController@show');
 
-  return "Standard query parameter: $userId";
-});
-
-Routes::add('/product', 'ProductController@show');
+Routes::add('/products/add', 'ProductController@add');

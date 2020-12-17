@@ -1,5 +1,13 @@
-<b>My name is {{name}}</b>
+{{@include header}}
 
-<b>My name is {{!name!}}</b>
+<p>The current time is: {{time}}</p>
+
+<br>
 
 {{@foreach products in product}}
+
+<p>The content has been escaped: {{xsstest}}</p>
+
+<p>The content has not been escaped: {{!xsstest!}}</p>
+
+{{@include footer}}

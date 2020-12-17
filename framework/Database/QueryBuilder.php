@@ -2,8 +2,6 @@
 
 namespace framework\Database;
 
-use framework\Base\Model;
-
 class QueryBuilder
 {
   /**
